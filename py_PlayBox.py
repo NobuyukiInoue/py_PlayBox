@@ -21,7 +21,7 @@ class myMIDI:
 
   def Out(self, outData, length):
     ctypes.windll.winmm.midiOutShortMsg(self.h, outData)
-    sleep(length/1000)
+    sleep(length/1000.0)
 
   def OutOnly(self, outData):
     #print('%x = %x' %(id(self.h), self.h))
@@ -175,7 +175,7 @@ while i < len(pData):
       play_on = "0x7f" + data + "90"
       pm.OutOnly(int(play_on, 16))
 
-    sleep(int(pData[i].length) / 1000)
+    sleep(int(pData[i].length) / 1000.0)
 
     for data in cnote:
       # Œ®”Õ‚ð—£‚·
