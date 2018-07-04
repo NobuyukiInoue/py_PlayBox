@@ -4,7 +4,6 @@
 import sys
 from time import sleep
 import ctypes
-import numpy
 from ctypes import *
 
 ##-----------------------------------------------------------------##
