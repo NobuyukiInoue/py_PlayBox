@@ -73,7 +73,7 @@ def loadDefFile(filename):
     temp = temp.rstrip()    # remove last \n
     flds = temp.split("=")
 
-    if flds[0] != "":
+    if temp != "":
       defs.append(ScaleDefs(flds[0],flds[1]))
 
   return defs
@@ -104,7 +104,7 @@ def loadPlayFile(filename):
     temp = temp.rstrip()    # remove last \n
     flds = temp.split("=")
 
-    if flds[0] != "":
+    if temp != "":
       pData.append(PlayData(flds[0], "", flds[1]))
 
   return pData
