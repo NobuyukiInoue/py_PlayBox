@@ -184,6 +184,10 @@ while i < len(pData):
 
   else:
     print('[%d] = rest, %s [ms]' %(i, pData[i].length))
+    
+    # ‹x•„
+    sleep(int(pData[i].length) / 1000.0)
+
   i += 1
 
 pm.Close()
