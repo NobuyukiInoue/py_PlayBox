@@ -6,8 +6,6 @@ from time import sleep
 import ctypes
 import numpy
 from ctypes import *
-#from ctypes.wintypes import DWORD
-#from ctypes.wintypes import UINT
 
 ##-----------------------------------------------------------------##
 ## MIDI関連関数コール処理用クラス
