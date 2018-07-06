@@ -13,7 +13,7 @@ class myMIDI:
   def __init__(self, initData):
     self.initData = c_int32(initData)
     self.MIDI_MAPPER = c_int32(-1)
-    self.h = c_uint32(0x00000000)
+    self.h = c_int32(0)
   
   def Init(self):
     ctypes.windll.Winmm.midiOutOpen(byref(self.h), self.MIDI_MAPPER, 0, 0, 0)
@@ -113,8 +113,7 @@ def loadPlayFile(filename):
 ## 音階文字列を検索し、ノートナンバーをセットする
 ##--------------------------------------------------------##
 def replaceScalt_to_Freq(defs, pData):
-  i = 0
-  while i < len(pData):
+  for i in range(len(pData)):
     scale = pData[i].scale.split(",")
     for temp in scale:
       j = 0
@@ -126,7 +125,6 @@ def replaceScalt_to_Freq(defs, pData):
             pData[i].note += "," + defs[j].note
           break
         j += 1
-    i += 1
 
 
 ##-----------------------------------------------------------------##
@@ -146,11 +144,9 @@ else:
     timbre = 1
 
 # 音階定義ファイルの読み込み
-defs = []
 defs = loadDefFile("note-number.dat")
 
 # 楽譜ファイルの読み込み
-pData = []
 pData = loadPlayFile(argv[1])
 
 # ノート番号のセット
@@ -163,8 +159,7 @@ pm.Init()
 print("")
 print("Load Done. Play Start!!")
 
-i = 0
-while i < len(pData):
+for i in range(len(pData)):
   if pData[i].note != "":
     print('[%d] = %s( %s ), %s [ms]' %(i, pData[i].scale, pData[i].note, pData[i].length))
 
@@ -187,8 +182,6 @@ while i < len(pData):
     
     # 休符
     sleep(int(pData[i].length) / 1000.0)
-
-  i += 1
 
 pm.Close()
 print()
