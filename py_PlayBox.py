@@ -13,7 +13,7 @@ class myMIDI:
   def __init__(self, initData):
     self.initData = c_int32(initData)
     self.MIDI_MAPPER = c_int32(-1)
-    self.h = c_int32(0)
+    self.h = c_uint32(0)
   
   def Init(self):
     ctypes.windll.Winmm.midiOutOpen(byref(self.h), self.MIDI_MAPPER, 0, 0, 0)
@@ -116,15 +116,13 @@ def replaceScalt_to_Freq(defs, pData):
   for i in range(len(pData)):
     scale = pData[i].scale.split(",")
     for temp in scale:
-      j = 0
-      while j < len(defs):
+      for j in range(len(defs)):
         if temp == defs[j].scale:
           if pData[i].note == "":
             pData[i].note = defs[j].note
           else:
             pData[i].note += "," + defs[j].note
           break
-        j += 1
 
 
 ##-----------------------------------------------------------------##
