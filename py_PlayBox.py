@@ -11,10 +11,15 @@ from ctypes import *
 ##-----------------------------------------------------------------##
 class myMIDI:
   def __init__(self, initData):
-    self.initData = c_int32(initData)
-    self.MIDI_MAPPER = c_int32(-1)
-    self.h = c_uint32(0)
-  
+    if (sys.maxsize == 2 ** 63 - 1):
+      self.initData = c_int64(initData)
+      self.MIDI_MAPPER = c_int64(-1)
+      self.h = c_uint64(0)
+    else:
+      self.initData = c_int32(initData)
+      self.MIDI_MAPPER = c_int32(-1)
+      self.h = c_uint32(0)
+    
   def Init(self):
     ctypes.windll.Winmm.midiOutOpen(byref(self.h), self.MIDI_MAPPER, 0, 0, 0)
     ctypes.windll.winmm.midiOutShortMsg(self.h, initData)
