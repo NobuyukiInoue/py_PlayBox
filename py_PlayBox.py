@@ -1,193 +1,187 @@
 #!python.exe
-# coding: cp932
 
+import ctypes
+from ctypes import *
 import os
 import sys
 from time import sleep
-import ctypes
-from ctypes import *
-
 
 class myMIDI:
-  """MIDIŠÖ˜AŠÖ”ƒR[ƒ‹ˆ——pƒNƒ‰ƒX"""
-  def __init__(self, initData):
-    if (sys.maxsize == 2 ** 63 - 1):
-      self.initData = c_int64(initData)
-      self.MIDI_MAPPER = c_int64(-1)
-      self.h = c_uint64(0)
-    else:
-      self.initData = c_int32(initData)
-      self.MIDI_MAPPER = c_int32(-1)
-      self.h = c_uint32(0)
-    
-  def Init(self):
-    ctypes.windll.Winmm.midiOutOpen(byref(self.h), self.MIDI_MAPPER, 0, 0, 0)
-    ctypes.windll.winmm.midiOutShortMsg(self.h, self.initData)
+    """MIDIé–¢é€£é–¢æ•°ã‚³ãƒ¼ãƒ«å‡¦ç†ç”¨ã‚¯ãƒ©ã‚¹"""
+    def __init__(self, initData):
+        if (sys.maxsize == 2 ** 63 - 1):
+            self.initData = c_int64(initData)
+            self.MIDI_MAPPER = c_int64(-1)
+            self.h = c_uint64(0)
+        else:
+            self.initData = c_int32(initData)
+            self.MIDI_MAPPER = c_int32(-1)
+            self.h = c_uint32(0)
+        
+    def Init(self):
+        ctypes.windll.Winmm.midiOutOpen(byref(self.h), self.MIDI_MAPPER, 0, 0, 0)
+        ctypes.windll.winmm.midiOutShortMsg(self.h, self.initData)
 
-  def Out(self, outData, length):
-    ctypes.windll.winmm.midiOutShortMsg(self.h, outData)
-    sleep(length/1000.0)
+    def Out(self, outData, length):
+        ctypes.windll.winmm.midiOutShortMsg(self.h, outData)
+        sleep(length/1000.0)
 
-  def OutOnly(self, outData):
-    #print('%x = %x' %(id(self.h), self.h))
-    ctypes.windll.winmm.midiOutShortMsg(self.h, outData)
+    def OutOnly(self, outData):
+        #print('%x = %x' %(id(self.h), self.h))
+        ctypes.windll.winmm.midiOutShortMsg(self.h, outData)
 
-  def Close(self):
-    ctypes.windll.winmm.midiOutReset(self.h)
+    def Close(self):
+        ctypes.windll.winmm.midiOutReset(self.h)
 
 
 class ScaleDefs:
-  """‰¹ŠK’è‹`‚ğŠi”[‚·‚éƒNƒ‰ƒX"""
-  def __init__(self, scale, note):
-    self.scale = scale
-    self.note = note
+    """éŸ³éšå®šç¾©ã‚’æ ¼ç´ã™ã‚‹ã‚¯ãƒ©ã‚¹"""
+    def __init__(self, scale, note):
+        self.scale = scale
+        self.note = note
 
 
 class PlayData:
-  """Šy•ˆƒf[ƒ^‚ğŠi”[‚·‚éƒNƒ‰ƒX"""
-  def __init__(self, scale, note, length):
-    self.scale = scale
-    self.note = note
-    self.length = length
+    """æ¥½è­œãƒ‡ãƒ¼ã‚¿ã‚’æ ¼ç´ã™ã‚‹ã‚¯ãƒ©ã‚¹"""
+    def __init__(self, scale, note, length):
+        self.scale = scale
+        self.note = note
+        self.length = length
 
 
 def loadDefFile(filename):
-  """‰¹ŠK’è‹`ƒtƒ@ƒCƒ‹‚ğ“Ç‚İ‚Ş"""
+    """éŸ³éšå®šç¾©ãƒ•ã‚¡ã‚¤ãƒ«ã‚’èª­ã¿è¾¼ã‚€"""
 
-  # ƒtƒ@ƒCƒ‹‚ğƒI[ƒvƒ“‚·‚é
-  defFile = open(filename, "r")
+    # ãƒ•ã‚¡ã‚¤ãƒ«ã‚’ã‚ªãƒ¼ãƒ—ãƒ³ã™ã‚‹
+    defFile = open(filename, "r")
 
-  # s‚²‚Æ‚É‚·‚×‚Ä“Ç‚İ‚ñ‚ÅƒŠƒXƒgƒf[ƒ^‚É‚·‚é
-  lines = defFile.readlines()
+    # è¡Œã”ã¨ã«ã™ã¹ã¦èª­ã¿è¾¼ã‚“ã§ãƒªã‚¹ãƒˆãƒ‡ãƒ¼ã‚¿ã«ã™ã‚‹
+    lines = defFile.readlines()
 
-  # ƒtƒ@ƒCƒ‹‚ğƒNƒ[ƒY‚·‚é
-  defFile.close()
+    # ãƒ•ã‚¡ã‚¤ãƒ«ã‚’ã‚¯ãƒ­ãƒ¼ã‚ºã™ã‚‹
+    defFile.close()
 
-  defs = []
-  for temp in lines:
-    pos = temp.find("//")
+    defs = []
+    for temp in lines:
+        pos = temp.find("//")
 
-    # ƒRƒƒ“ƒgŠJn•¶š"//"‚æ‚è‘O‚ğæ‚èo‚·
-    if (pos >= 0):
-      temp = temp[:pos]
+        # ã‚³ãƒ¡ãƒ³ãƒˆé–‹å§‹æ–‡å­—"//"ã‚ˆã‚Šå‰ã‚’å–ã‚Šå‡ºã™
+        if (pos >= 0):
+            temp = temp[:pos]
 
-    temp = temp.replace(" ", "")
-    temp = temp.replace("\t", "")
-    temp = temp.rstrip()    # remove last \n
-    flds = temp.split("=")
+        temp = temp.replace(" ", "").replace("\t", "").rstrip()
+        flds = temp.split("=")
 
-    if temp != "":
-      defs.append(ScaleDefs(flds[0],flds[1]))
+        if temp != "":
+            defs.append(ScaleDefs(flds[0],flds[1]))
 
-  return defs
+    return defs
 
 
 def loadPlayFile(filename):
-  """‰¹ŠK’è‹`ƒtƒ@ƒCƒ‹‚ğ“Ç‚İ‚Ş"""
+    """éŸ³éšå®šç¾©ãƒ•ã‚¡ã‚¤ãƒ«ã‚’èª­ã¿è¾¼ã‚€"""
 
-  # ƒtƒ@ƒCƒ‹‚ğƒI[ƒvƒ“‚·‚é
-  playFile = open(filename, "r")
+    # ãƒ•ã‚¡ã‚¤ãƒ«ã‚’ã‚ªãƒ¼ãƒ—ãƒ³ã™ã‚‹
+    playFile = open(filename, "r")
 
-  # s‚²‚Æ‚É‚·‚×‚Ä“Ç‚İ‚ñ‚ÅƒŠƒXƒgƒf[ƒ^‚É‚·‚é
-  lines = playFile.readlines()
+    # è¡Œã”ã¨ã«ã™ã¹ã¦èª­ã¿è¾¼ã‚“ã§ãƒªã‚¹ãƒˆãƒ‡ãƒ¼ã‚¿ã«ã™ã‚‹
+    lines = playFile.readlines()
 
-  # ƒtƒ@ƒCƒ‹‚ğƒNƒ[ƒY‚·‚é
-  playFile.close()
+    # ãƒ•ã‚¡ã‚¤ãƒ«ã‚’ã‚¯ãƒ­ãƒ¼ã‚ºã™ã‚‹
+    playFile.close()
 
-  pData = []
-  for temp in lines:
-    pos = temp.find("//")
+    pData = []
+    for temp in lines:
+        pos = temp.find("//")
 
-    # ƒRƒƒ“ƒgŠJn•¶š"//"‚æ‚è‘O‚ğæ‚èo‚·
-    if (pos >= 0):
-      temp = temp[:pos]
+        # ã‚³ãƒ¡ãƒ³ãƒˆé–‹å§‹æ–‡å­—"//"ã‚ˆã‚Šå‰ã‚’å–ã‚Šå‡ºã™
+        if (pos >= 0):
+            temp = temp[:pos]
 
-    temp = temp.replace(" ", "")
-    temp = temp.replace("\t", "")
-    temp = temp.rstrip()    # remove last \n
-    flds = temp.split("=")
+        temp = temp.replace(" ", "").replace("\t", "").rstrip()
+        flds = temp.split("=")
 
-    if temp != "":
-      pData.append(PlayData(flds[0], "", flds[1]))
+        if temp != "":
+            pData.append(PlayData(flds[0], "", flds[1]))
 
-  return pData
+    return pData
 
 
 def replaceScalt_to_Freq(defs, pData):
-  """‰¹ŠK•¶š—ñ‚ğŒŸõ‚µAƒm[ƒgƒiƒ“ƒo[‚ğƒZƒbƒg‚·‚é"""
-  for currentData in pData:
-    scale = currentData.scale.split(",")
-    for temp in scale:
-      for currentLen in defs:
-        if temp == currentLen.scale:
-          if currentData.note == "":
-            currentData.note = currentLen.note
-          else:
-            currentData.note += "," + currentLen.note
-          break
+    """éŸ³éšæ–‡å­—åˆ—ã‚’æ¤œç´¢ã—ã€ãƒãƒ¼ãƒˆãƒŠãƒ³ãƒãƒ¼ã‚’ã‚»ãƒƒãƒˆã™ã‚‹"""
+    for currentData in pData:
+        scale = currentData.scale.split(",")
+        for temp in scale:
+            for currentLen in defs:
+                if temp == currentLen.scale:
+                    if currentData.note == "":
+                        currentData.note = currentLen.note
+                    else:
+                        currentData.note += "," + currentLen.note
+                    break
 
 
 def main():
-  argv = sys.argv
-  argc = len(argv)
+    argv = sys.argv
+    argc = len(argv)
 
-  if (argc < 2):
-    #ˆø”‚ÌŒÂ”ƒ`ƒFƒbƒN
-    print('Usage: python %s musicDataFile <timbre>' %argv[0] )
-    quit()
+    if (argc < 2):
+        #å¼•æ•°ã®å€‹æ•°ãƒã‚§ãƒƒã‚¯
+        print('Usage: python %s musicDataFile <timbre>' %argv[0] )
+        quit()
 
-  note_number_file = "note-number.dat"
-  if not os.path.exists(note_number_file):
-    print('%s not found.' %note_number_file)
-    quit()
+    note_number_file = "note-number.dat"
+    if not os.path.exists(note_number_file):
+        print('%s not found.' %note_number_file)
+        quit()
 
-  if (argc >= 3):
-      timbre = int(argv[2])
-  else:
-      timbre = 1
-
-  # ‰¹ŠK’è‹`ƒtƒ@ƒCƒ‹‚Ì“Ç‚İ‚İ
-  defs = loadDefFile(note_number_file)
-
-  # Šy•ˆƒtƒ@ƒCƒ‹‚Ì“Ç‚İ‚İ
-  pData = loadPlayFile(argv[1])
-
-  # ƒm[ƒg”Ô†‚ÌƒZƒbƒg
-  replaceScalt_to_Freq(defs, pData)
-
-  initData = timbre*256 + 0xc0
-  pm = myMIDI(initData)
-  pm.Init()
-
-  print("\nLoad Done. Play Start!!")
-
-  i = 0
-  for currentpData in pData:
-    if currentpData.note != "":
-      print('[%d] = %s( %s ), %s [ms]' %(i, currentpData.scale, currentpData.note, currentpData.length))
-      cnote = currentpData.note.split(",")
-
-      for data in cnote:
-        # Œ®”Õ‚ğ‰Ÿ‚·
-        play_on = "0x7f" + data + "90"
-        pm.OutOnly(int(play_on, 16))
-
-      sleep(int(currentpData.length) / 1000.0)
-
-      for data in cnote:
-        # Œ®”Õ‚ğ—£‚·
-        play_off = "0x7f" + data + "80"
-        pm.OutOnly(int(play_off, 16))
-
+    if (argc >= 3):
+            timbre = int(argv[2])
     else:
-      print('[%d] = rest, %s [ms]' %(i, currentpData.length))
-      
-      # ‹x•„
-      sleep(int(currentpData.length) / 1000.0)
-      i += 1
+            timbre = 1
 
-  pm.Close()
-  print()
+    # éŸ³éšå®šç¾©ãƒ•ã‚¡ã‚¤ãƒ«ã®èª­ã¿è¾¼ã¿
+    defs = loadDefFile(note_number_file)
+
+    # æ¥½è­œãƒ•ã‚¡ã‚¤ãƒ«ã®èª­ã¿è¾¼ã¿
+    pData = loadPlayFile(argv[1])
+
+    # ãƒãƒ¼ãƒˆç•ªå·ã®ã‚»ãƒƒãƒˆ
+    replaceScalt_to_Freq(defs, pData)
+
+    initData = timbre*256 + 0xc0
+    pm = myMIDI(initData)
+    pm.Init()
+
+    print("\nLoad Done. Play Start!!")
+
+    i = 0
+    for currentpData in pData:
+        if currentpData.note != "":
+            print('[%d] = %s( %s ), %s [ms]' %(i, currentpData.scale, currentpData.note, currentpData.length))
+            cnote = currentpData.note.split(",")
+
+            for data in cnote:
+                # éµç›¤ã‚’æŠ¼ã™
+                play_on = "0x7f" + data + "90"
+                pm.OutOnly(int(play_on, 16))
+
+            sleep(int(currentpData.length) / 1000.0)
+
+            for data in cnote:
+                # éµç›¤ã‚’é›¢ã™
+                play_off = "0x7f" + data + "80"
+                pm.OutOnly(int(play_off, 16))
+
+        else:
+            print('[%d] = rest, %s [ms]' %(i, currentpData.length))
+            
+            # ä¼‘ç¬¦
+            sleep(int(currentpData.length) / 1000.0)
+        i += 1
+
+    pm.Close()
+    print()
 
 if __name__ == "__main__":
-  main()
+    main()
