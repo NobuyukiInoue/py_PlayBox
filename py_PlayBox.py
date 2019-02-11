@@ -7,7 +7,7 @@ import sys
 from time import sleep
 
 class myMIDI:
-    """MIDIé–¢é€£é–¢æ•°ã‚³ãƒ¼ãƒ«å‡¦ç†ç”¨ã‚¯ãƒ©ã‚¹"""
+    """MIDIŠÖ˜AŠÖ”ƒR[ƒ‹ˆ——pƒNƒ‰ƒX"""
     def __init__(self, initData):
         if (sys.maxsize == 2 ** 63 - 1):
             self.initData = c_int64(initData)
@@ -35,14 +35,14 @@ class myMIDI:
 
 
 class ScaleDefs:
-    """éŸ³éšå®šç¾©ã‚’æ ¼ç´ã™ã‚‹ã‚¯ãƒ©ã‚¹"""
+    """‰¹ŠK’è‹`‚ğŠi”[‚·‚éƒNƒ‰ƒX"""
     def __init__(self, scale, note):
         self.scale = scale
         self.note = note
 
 
 class PlayData:
-    """æ¥½è­œãƒ‡ãƒ¼ã‚¿ã‚’æ ¼ç´ã™ã‚‹ã‚¯ãƒ©ã‚¹"""
+    """Šy•ˆƒf[ƒ^‚ğŠi”[‚·‚éƒNƒ‰ƒX"""
     def __init__(self, scale, note, length):
         self.scale = scale
         self.note = note
@@ -50,22 +50,22 @@ class PlayData:
 
 
 def loadDefFile(filename):
-    """éŸ³éšå®šç¾©ãƒ•ã‚¡ã‚¤ãƒ«ã‚’èª­ã¿è¾¼ã‚€"""
+    """‰¹ŠK’è‹`ƒtƒ@ƒCƒ‹‚ğ“Ç‚İ‚Ş"""
 
-    # ãƒ•ã‚¡ã‚¤ãƒ«ã‚’ã‚ªãƒ¼ãƒ—ãƒ³ã™ã‚‹
+    # ƒtƒ@ƒCƒ‹‚ğƒI[ƒvƒ“‚·‚é
     defFile = open(filename, "r")
 
-    # è¡Œã”ã¨ã«ã™ã¹ã¦èª­ã¿è¾¼ã‚“ã§ãƒªã‚¹ãƒˆãƒ‡ãƒ¼ã‚¿ã«ã™ã‚‹
+    # s‚²‚Æ‚É‚·‚×‚Ä“Ç‚İ‚ñ‚ÅƒŠƒXƒgƒf[ƒ^‚É‚·‚é
     lines = defFile.readlines()
 
-    # ãƒ•ã‚¡ã‚¤ãƒ«ã‚’ã‚¯ãƒ­ãƒ¼ã‚ºã™ã‚‹
+    # ƒtƒ@ƒCƒ‹‚ğƒNƒ[ƒY‚·‚é
     defFile.close()
 
     defs = []
     for temp in lines:
         pos = temp.find("//")
 
-        # ã‚³ãƒ¡ãƒ³ãƒˆé–‹å§‹æ–‡å­—"//"ã‚ˆã‚Šå‰ã‚’å–ã‚Šå‡ºã™
+        # ƒRƒƒ“ƒgŠJn•¶š"//"‚æ‚è‘O‚ğæ‚èo‚·
         if (pos >= 0):
             temp = temp[:pos]
 
@@ -79,22 +79,22 @@ def loadDefFile(filename):
 
 
 def loadPlayFile(filename):
-    """éŸ³éšå®šç¾©ãƒ•ã‚¡ã‚¤ãƒ«ã‚’èª­ã¿è¾¼ã‚€"""
+    """Šy•ˆƒtƒ@ƒCƒ‹‚ğ“Ç‚İ‚Ş"""
 
-    # ãƒ•ã‚¡ã‚¤ãƒ«ã‚’ã‚ªãƒ¼ãƒ—ãƒ³ã™ã‚‹
+    # ƒtƒ@ƒCƒ‹‚ğƒI[ƒvƒ“‚·‚é
     playFile = open(filename, "r")
 
-    # è¡Œã”ã¨ã«ã™ã¹ã¦èª­ã¿è¾¼ã‚“ã§ãƒªã‚¹ãƒˆãƒ‡ãƒ¼ã‚¿ã«ã™ã‚‹
+    # s‚²‚Æ‚É‚·‚×‚Ä“Ç‚İ‚ñ‚ÅƒŠƒXƒgƒf[ƒ^‚É‚·‚é
     lines = playFile.readlines()
 
-    # ãƒ•ã‚¡ã‚¤ãƒ«ã‚’ã‚¯ãƒ­ãƒ¼ã‚ºã™ã‚‹
+    # ƒtƒ@ƒCƒ‹‚ğƒNƒ[ƒY‚·‚é
     playFile.close()
 
     pData = []
     for temp in lines:
         pos = temp.find("//")
 
-        # ã‚³ãƒ¡ãƒ³ãƒˆé–‹å§‹æ–‡å­—"//"ã‚ˆã‚Šå‰ã‚’å–ã‚Šå‡ºã™
+        # ƒRƒƒ“ƒgŠJn•¶š"//"‚æ‚è‘O‚ğæ‚èo‚·
         if (pos >= 0):
             temp = temp[:pos]
 
@@ -108,7 +108,7 @@ def loadPlayFile(filename):
 
 
 def replaceScalt_to_Freq(defs, pData):
-    """éŸ³éšæ–‡å­—åˆ—ã‚’æ¤œç´¢ã—ã€ãƒãƒ¼ãƒˆãƒŠãƒ³ãƒãƒ¼ã‚’ã‚»ãƒƒãƒˆã™ã‚‹"""
+    """‰¹ŠK•¶š—ñ‚ğŒŸõ‚µAƒm[ƒgƒiƒ“ƒo[‚ğƒZƒbƒg‚·‚é"""
     for currentData in pData:
         scale = currentData.scale.split(",")
         for temp in scale:
@@ -126,7 +126,7 @@ def main():
     argc = len(argv)
 
     if (argc < 2):
-        #å¼•æ•°ã®å€‹æ•°ãƒã‚§ãƒƒã‚¯
+        #ˆø”‚ÌŒÂ”ƒ`ƒFƒbƒN
         print('Usage: python %s musicDataFile <timbre>' %argv[0] )
         quit()
 
@@ -140,13 +140,13 @@ def main():
     else:
             timbre = 1
 
-    # éŸ³éšå®šç¾©ãƒ•ã‚¡ã‚¤ãƒ«ã®èª­ã¿è¾¼ã¿
+    # ‰¹ŠK’è‹`ƒtƒ@ƒCƒ‹‚Ì“Ç‚İ‚İ
     defs = loadDefFile(note_number_file)
 
-    # æ¥½è­œãƒ•ã‚¡ã‚¤ãƒ«ã®èª­ã¿è¾¼ã¿
+    # Šy•ˆƒtƒ@ƒCƒ‹‚Ì“Ç‚İ‚İ
     pData = loadPlayFile(argv[1])
 
-    # ãƒãƒ¼ãƒˆç•ªå·ã®ã‚»ãƒƒãƒˆ
+    # ƒm[ƒg”Ô†‚ÌƒZƒbƒg
     replaceScalt_to_Freq(defs, pData)
 
     initData = timbre*256 + 0xc0
@@ -162,21 +162,21 @@ def main():
             cnote = currentpData.note.split(",")
 
             for data in cnote:
-                # éµç›¤ã‚’æŠ¼ã™
+                # Œ®”Õ‚ğ‰Ÿ‚·
                 play_on = "0x7f" + data + "90"
                 pm.OutOnly(int(play_on, 16))
 
             sleep(int(currentpData.length) / 1000.0)
 
             for data in cnote:
-                # éµç›¤ã‚’é›¢ã™
+                # Œ®”Õ‚ğ—£‚·
                 play_off = "0x7f" + data + "80"
                 pm.OutOnly(int(play_off, 16))
 
         else:
             print('[%d] = rest, %s [ms]' %(i, currentpData.length))
             
-            # ä¼‘ç¬¦
+            # ‹x•„
             sleep(int(currentpData.length) / 1000.0)
         i += 1
 
