@@ -9,7 +9,7 @@ from time import sleep
 class myMIDI:
     """MIDI関連関数コール処理用クラス"""
     def __init__(self, initData):
-        if (sys.maxsize == 2 ** 63 - 1):
+        if sys.maxsize == 2 ** 63 - 1:
             self.initData = c_int64(initData)
             self.MIDI_MAPPER = c_int64(-1)
             self.h = c_uint64(0)
